@@ -1,0 +1,15 @@
+yarn.lock
+
+node_modules/
+
+#ide
+.vscode/
+.idea/
+
+#env
+.env
+.env.production
+.env.staging
+
+# MacOS X
+.DS_Store/
