@@ -1,4 +1,4 @@
-import jwtHelper from "../helper/jwt_helper";
+import jwtHelper from "../helper/JwtHelper";
 
 const debug = console.log.bind(console);
 

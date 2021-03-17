@@ -1,5 +1,5 @@
-import {DataTypes} from "sequelize";
-import {sequelize} from "./database";
+import { DataTypes } from "sequelize";
+import { sequelize } from "./database";
 
 const User = sequelize.define(
   "user",
@@ -14,12 +14,13 @@ const User = sequelize.define(
       allowNull: false,
       unique: true,
     },
-    avatarUrl: {
+    phone: {
       type: DataTypes.STRING,
+      unique: true,
     },
     hashPassword: {
-      type: DataTypes.STRING
-    }
+      type: DataTypes.STRING,
+    },
   },
   {
     underscored: true,

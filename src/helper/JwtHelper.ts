@@ -1,7 +1,7 @@
 import UserDTO from "../dto/UserDTO";
 
-const jwt_helper = require("jsonwebtoken");
-const generateToken = (
+const jwtHelper = require("jsonwebtoken");
+export const generateToken = (
   user: UserDTO,
 ): Promise<string> => {
   const secretSignature = process.env.ACCESS_TOKEN_SECRET || 'hieudeptrai';
@@ -13,7 +13,7 @@ const generateToken = (
       id: user.id,
       email: user.email,
     };
-    jwt_helper.sign(
+    jwtHelper.sign(
       { data: userData },
       secretSignature,
       {
@@ -30,10 +30,10 @@ const generateToken = (
   });
 };
 
-const verifyToken = (token: string) => {
+export const verifyToken = (token: string) => {
   const secretSignature = process.env.ACCESS_TOKEN_SECRET || 'hieudeptrai';
   return new Promise((resolve, reject) => {
-    jwt_helper.verify(token, secretSignature , (error, decoded) => {
+    jwtHelper.verify(token, secretSignature , (error, decoded) => {
       if (error) {
         return reject(error);
       }
