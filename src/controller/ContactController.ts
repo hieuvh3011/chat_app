@@ -1,19 +1,29 @@
-import ContactDTO from "../dto/ContactDTO";
+const User = require("../entities/User");
 
-const onRequestGetAllContact = (req, res) => {
-  res.send(res.body);
+export const checkContact = async (
+  userId: string,
+  contactId: string
+): Promise<boolean> => {
+  const user = await User.findById(userId).exec();
+  const contact_id = user?.contact_id || [];
+  return contact_id.includes(contactId);
 };
 
-const onRequestAddContact = (req, res) => {
-  res.send(res.body);
+export const addContact = async (
+  userId: string,
+  contactId: string
+): Promise<any> => {
+  const user = await User.findById(userId).exec();
+  const contact = await User.findById(contactId).exec();
+  const isContactExists = await checkContact(userId, contactId);
+  if (isContactExists === false) {
+    await User.updateOne(
+      { email: user.email },
+      {
+        contact_id: [...user.contact_id, contact.id],
+      }
+    );
+  } else {
+    return -1;
+  }
 };
-
-const getContactListByUserId = async (
-  userId: number
-): Promise<Array<ContactDTO>> => {
-  const result = [];
-
-  return result;
-};
-
-export default { onRequestGetAllContact, onRequestAddContact };

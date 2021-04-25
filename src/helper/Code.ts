@@ -12,4 +12,10 @@ export const ERROR = {
     MISSING_PHONE: 10,
     PHONE_ALREADY_EXIST: 11,
   },
+  CONVERSATION: {
+    MISSING_CONTACT_ID: 12,
+  },
+  CONTACT: {
+    MISSING_USER_ID: 13,
+  }
 };

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-import UserController from "../controller/UserController";
+import * as UserController from "../controller/UserController";
 
 // router.use(function timeLog(req, res, next) {
 //   console.log("Time: ", Date.now());

@@ -1,35 +1,17 @@
-import {DataTypes} from "sequelize";
-import {sequelize} from "./database";
-import Conversation from "./Conversation";
-import User from "./User";
+import mongoose from "../repository/database";
 
-const Message = sequelize.define(
-  "message",
-  {
-    // Model attributes are defined here
-    fullName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
-    avatarUrl: {
-      type: DataTypes.STRING,
-    },
-    hashPassword: {
-      type: DataTypes.STRING
-    }
-  },
-  {
-    underscored: true,
-  }
-);
+const { Schema } = mongoose;
 
-Conversation.hasMany(Message);
-Message.belongsTo(Conversation);
-Message.belongsTo(User, {foreignKey: 'creator_id'})
+const messageSchema = new Schema({
+  room_id: { type: String, default: "" },
+  sender_id: String,
+  receiver_id: String,
+  message_body: String,
+  message_status: { type: Number, default: 0 },
+  created_at: { type: Date, default: Date.now },
+  updated_at: { type: Date, default: Date.now },
+});
 
-export default Message;
+messageSchema.index({ message_body: "text" });
+
+module.exports = mongoose.model("Message", messageSchema, "message");

@@ -1,19 +1,15 @@
-import {DataTypes} from "sequelize";
-import {sequelize} from "./database";
-import Message from "./Message";
+import mongoose from "../repository/database";
 
-const Conversation = sequelize.define(
-  "conversation",
-  {
-    // Model attributes are defined here
-    title: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-  },
-  {
-    underscored: true,
-  }
+const { Schema } = mongoose;
+
+const conversationSchema = new Schema({
+  receiver_id: String,
+});
+
+conversationSchema.index({ full_name: "text", email: "text" });
+
+module.exports = mongoose.model(
+  "Conversation",
+  conversationSchema,
+  "conversation"
 );
-
-export default Conversation;

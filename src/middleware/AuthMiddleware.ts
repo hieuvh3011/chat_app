@@ -9,7 +9,7 @@ const debug = console.log.bind(console);
  * @param {*} next
  */
 const isAuth = async (req, res, next): Promise<void> => {
-  const tokenFromClient = req.header("Authorization").replace("Bearer ", "");
+  const tokenFromClient = req?.header("Authorization")?.replace("Bearer ", "");
 
   if (tokenFromClient) {
     try {
