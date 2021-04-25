@@ -11,13 +11,7 @@ const UserRoute = require("./src/routing/UserRoute");
  * */
 
 const app = express();
-const DEFAULT_PORT = 5001;
 dotenv.config();
-
-const PORT = process.env.PORT || DEFAULT_PORT;
-// app.get("/", (req, res) => {
-//   return res.send("ok men");
-// });
 
 app.use(bodyParser.json({ type: "application/*+json" }));
 app.use(
@@ -26,9 +20,10 @@ app.use(
   })
 );
 
-app.listen(PORT, () => {
-  console.log(`listening on PORT: ${PORT}`);
+app.listen(process.env.PORT || 3000, function(){
+  console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
 });
+
 app.use("/auth", AuthRoute);
 // app.use("/conversation", ConversationRoute);
 app.use("/user", UserRoute);
