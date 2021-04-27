@@ -71,15 +71,32 @@ export const getUserByPhone = async (phone: string): Promise<any> => {
 
 export const getUserDTOByEmail = async (email: string): Promise<UserDTO> => {
   const user = await getUserByEmail(email);
-  // const contactList = await getContactList(user?.id);
+  const contactList = await getAllUser();
   return {
     id: user.id,
     full_name: user.full_name,
     email: user.email,
     phone: user.phone,
-    contact_list: [],
+    contact_list: contactList,
     access_token: "",
   };
+};
+
+export const getAllUser = async (): Promise<any> => {
+  const rawListUser = await User.find({})
+    .select("_id avatar full_name email phone")
+    .exec();
+  const listUser = [];
+  await rawListUser?.map((item) => {
+    const newItem = item.transform();
+    listUser.push(newItem);
+  });
+  console.log("list user = ", listUser);
+  if (JSON.stringify(listUser) === JSON.stringify([])) {
+    return {};
+  }
+  // console.log('list user = ', listUser)
+  return listUser;
 };
 
 // export const getContactList = async (userId = ""): Promise<any> => {
@@ -115,11 +132,11 @@ export const onRegister = async (req, res): Promise<any> => {
     if (isEmailExist) {
       resBody.message = "Email is already exist!";
       resBody.status = CODE.ERROR.AUTH.EMAIL_ALREADY_EXIST;
-      resBody.data = [];
+      resBody.data = {};
     } else if (isPhoneExist) {
       resBody.message = "Phone number is already exist!";
       resBody.status = CODE.ERROR.AUTH.PHONE_ALREADY_EXIST;
-      resBody.data = [];
+      resBody.data = {};
     } else {
       await storeUser(email, password, full_name, phone, avatarUrl);
       resBody.status = CODE.SUCCESS_CODE;
@@ -152,15 +169,14 @@ export const onLogin = async (req, res): Promise<any> => {
     if (!isEmailExist) {
       resBody.message = "Email is not registered!";
       resBody.status = CODE.ERROR.AUTH.EMAIL_ALREADY_EXIST;
-      resBody.data = [];
+      resBody.data = {};
     } else {
       const isCorrect = await isCorrectUser(email, password);
       if (!isCorrect) {
         resBody.status = CODE.ERROR.AUTH.INCORRECT_PASSWORD;
         resBody.message = "Email or password is incorrect";
-        resBody.data = [];
+        resBody.data = {};
       } else {
-        // const employee = await getEmployeeByEmail(email);
         const result = await getUserDTOByEmail(email);
         await getToken(result);
         if (!result) {

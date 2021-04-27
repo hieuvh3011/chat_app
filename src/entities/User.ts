@@ -14,5 +14,13 @@ const userSchema = new Schema({
 });
 
 userSchema.index({ full_name: "text", email: "text" });
+userSchema.method('transform', function() {
+  const obj = this.toObject();
 
+  //Rename fields
+  obj.id = obj._id;
+  delete obj._id;
+
+  return obj;
+});
 module.exports = mongoose.model("User", userSchema, "user");
