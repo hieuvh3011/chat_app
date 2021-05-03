@@ -19,7 +19,7 @@ export const storeMessage = async (
       created_at: new Date(),
       updated_at: new Date(),
     })
-    result = await Message.save(message).exec();
+    result = await Message.save(message);
   } catch (error) {
     console.log("storeMessage error = ", error);
     result = -1;
