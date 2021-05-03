@@ -1,29 +1,26 @@
-import {DataTypes} from "sequelize";
-import {sequelize} from "./database";
+import mongoose from "../repository/database";
 
-const User = sequelize.define(
-  "user",
-  {
-    // Model attributes are defined here
-    fullName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
-    avatarUrl: {
-      type: DataTypes.STRING,
-    },
-    hashPassword: {
-      type: DataTypes.STRING
-    }
-  },
-  {
-    underscored: true,
-  }
-);
+const { Schema } = mongoose;
 
-export default User;
+const userSchema = new Schema({
+  full_name: String,
+  avatar: { type: String, default: "" },
+  password: String,
+  email: String,
+  contact_id: { type: Array, default: [] },
+  phone: String,
+  created_at: { type: Date, default: Date.now() },
+  updated_at: { type: Date, default: Date.now() },
+});
+
+userSchema.index({ full_name: "text", email: "text" });
+userSchema.method('transform', function() {
+  const obj = this.toObject();
+
+  //Rename fields
+  obj.id = obj._id;
+  delete obj._id;
+
+  return obj;
+});
+module.exports = mongoose.model("User", userSchema, "user");

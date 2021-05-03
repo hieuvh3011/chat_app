@@ -1,4 +1,4 @@
-import jwtHelper from "../helper/jwt_helper";
+import jwtHelper from "../helper/JwtHelper";
 
 const debug = console.log.bind(console);
 
@@ -9,7 +9,7 @@ const debug = console.log.bind(console);
  * @param {*} next
  */
 const isAuth = async (req, res, next): Promise<void> => {
-  const tokenFromClient = req.header("Authorization").replace("Bearer ", "");
+  const tokenFromClient = req?.header("Authorization")?.replace("Bearer ", "");
 
   if (tokenFromClient) {
     try {
