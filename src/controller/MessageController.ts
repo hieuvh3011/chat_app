@@ -11,13 +11,14 @@ export const storeMessage = async (
 ): Promise<any> => {
   let result = -1;
   try {
-    const message = new MessageDTO();
-    message.content = content;
-    message.image = image || "";
-    message.receiver_id = receiver_id;
-    message.sender_id = sender_id;
-    message.created_at = new Date();
-    message.updated_at = new Date();
+    const message = new Message({
+      content: content,
+      image: image,
+      receiver_id: receiver_id,
+      sender_id: sender_id,
+      created_at: new Date(),
+      updated_at: new Date(),
+    })
     result = await Message.save(message).exec();
   } catch (error) {
     console.log("storeMessage error = ", error);
