@@ -17,5 +17,11 @@ export const ERROR = {
   },
   CONTACT: {
     MISSING_USER_ID: 13,
-  }
+  },
+  MESSAGE: {
+    CANNOT_SEND_EMPTY_BODY: 14,
+    MUST_HAVE_RECEIVER: 15,
+    MUST_HAVE_SENDER: 16,
+    SOME_ERROR_HAPPENED: 17,
+  },
 };

@@ -7,7 +7,7 @@ const ConversationRoute = require("./src/routing/ConversationRoute");
 const bodyParser = require("body-parser");
 const socket = require("socket.io");
 const UserRoute = require("./src/routing/UserRoute");
-
+const MessageRoute = require('./src/routing/MessageRoute');
 /**
  * end import here
  * Use mixed import in this file
@@ -60,3 +60,4 @@ io.on("connection", (socket) => {
 app.use("/auth", AuthRoute);
 // app.use("/conversation", ConversationRoute);
 app.use("/user", UserRoute);
+app.use("/message", MessageRoute);

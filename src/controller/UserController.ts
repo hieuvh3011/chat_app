@@ -3,7 +3,6 @@ import { generateToken } from "../helper/JwtHelper";
 import ResponseForm from "../helper/ResponseForm";
 import * as CODE from "../helper/Code";
 import jwtHelper from "../helper/JwtHelper";
-import ContactDTO from "../dto/ContactDTO";
 
 const User = require("../entities/User");
 const bcrypt = require("bcryptjs");
