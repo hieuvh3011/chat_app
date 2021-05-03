@@ -70,27 +70,29 @@ export const getUserByPhone = async (phone: string): Promise<any> => {
 
 export const getUserDTOByEmail = async (email: string): Promise<UserDTO> => {
   const user = await getUserByEmail(email);
-  const contactList = await getAllUser();
+  // const contactList = await getAllUser();
   return {
     id: user.id,
     full_name: user.full_name,
     email: user.email,
     phone: user.phone,
-    contact_list: contactList,
+    contact_list: [],
     access_token: "",
   };
 };
 
-export const getAllUser = async (): Promise<any> => {
+export const getAllUser = async (userId: string): Promise<any> => {
   const rawListUser = await User.find({})
     .select("_id avatar full_name email phone")
     .exec();
+
   const listUser = [];
   await rawListUser?.map((item) => {
     const newItem = item.transform();
-    listUser.push(newItem);
+    if (item._id.toString() !== userId.toString()) {
+      listUser.push(newItem);
+    }
   });
-  console.log("list user = ", listUser);
   if (JSON.stringify(listUser) === JSON.stringify([])) {
     return {};
   }
@@ -219,8 +221,7 @@ export const storeUser = async (
     });
 
     await user.save();
-    const userStored = await getUserByEmail(email);
-    console.log("userStored: ", userStored);
+    // await getUserByEmail(email);
   } catch (exception) {
     console.log("userStored exception: ", exception.toString());
   }
@@ -242,12 +243,11 @@ export const isCorrectUser = async (
   return await bcrypt.compare(password, hashedPassword);
 };
 
-export const getUserIdFromToken = async (token: string): Promise<any> => {
+export const getUserIdFromToken = async (token: string): Promise<string> => {
   if (token.startsWith("Bearer ")) {
     token = token.replace("Bearer ", "");
   }
   const decodeToken = await jwtHelper.verifyToken(token);
-  console.log("decodeToken = ", decodeToken);
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   return decodeToken?.data?.id;
@@ -261,7 +261,6 @@ export const findUserByEmail = async (email: string): Promise<UserDTO> => {
   })
     .select("full_name _id avatar email")
     .exec();
-  console.log("findUserByEmail result = ", result);
   return result;
 };
 
@@ -271,7 +270,7 @@ export const findUserById = async (id: string): Promise<UserDTO> => {
 
 export const findListContact = async (listId = []): Promise<Array<UserDTO>> => {
   const result = [];
-  await listId.map(async (item) => {
+  listId.map(async (item) => {
     const user = await User.findById(item);
     result.push(user);
   });
@@ -282,9 +281,17 @@ export const onRequestFindUser = async (req, res): Promise<any> => {
   const { email } = req.query;
   console.log("req params = ", req.query);
   console.log("email to search = ", email);
+  const tokenFromClient = req?.header("Authorization")?.replace("Bearer ", "");
+  const userId = (await getUserIdFromToken(tokenFromClient)) || "";
   const response = new ResponseForm();
-  const listUser = await findUserByEmail(email);
-  response.status = CODE.SUCCESS_CODE;
-  response.data = listUser;
+  if (!email) {
+    const listUser = await getAllUser(userId);
+    response.status = CODE.SUCCESS_CODE;
+    response.data = listUser;
+  } else {
+    const listUser = await findUserByEmail(email);
+    response.status = CODE.SUCCESS_CODE;
+    response.data = listUser;
+  }
   res.send(response);
 };
