@@ -7,4 +7,5 @@ export default class UserDTO {
   phone: string;
   contact_list: Array<ContactDTO>;
   access_token: string;
+  avatar: string;
 }

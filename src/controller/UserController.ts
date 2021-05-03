@@ -16,7 +16,6 @@ export const getHashedPasswordByEmail = async (
   email: string
 ): Promise<string> => {
   const user = await User.findOne({ email }).exec();
-  console.log("password = ", user.password);
   return user.password || "";
 };
 
@@ -76,6 +75,7 @@ export const getUserDTOByEmail = async (email: string): Promise<UserDTO> => {
     full_name: user.full_name,
     email: user.email,
     phone: user.phone,
+    avatar: user.avatar,
     contact_list: [],
     access_token: "",
   };
@@ -217,7 +217,7 @@ export const storeUser = async (
       password: hashedPassword,
       full_name,
       phone,
-      avatar_url,
+      avatar: avatar_url,
     });
 
     await user.save();
@@ -279,8 +279,6 @@ export const findListContact = async (listId = []): Promise<Array<UserDTO>> => {
 
 export const onRequestFindUser = async (req, res): Promise<any> => {
   const { email } = req.query;
-  console.log("req params = ", req.query);
-  console.log("email to search = ", email);
   const tokenFromClient = req?.header("Authorization")?.replace("Bearer ", "");
   const userId = (await getUserIdFromToken(tokenFromClient)) || "";
   const response = new ResponseForm();
